@@ -2,6 +2,7 @@ package stateCodeAnanlyser;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
@@ -11,7 +12,7 @@ import java.util.stream.StreamSupport;
 
 public class StateCodeAnalyser {
 
-    public int loadStateCodeData(String csvFilePath ) throws StateCodeAnalyserException {
+    public int loadStateCodeData(String csvFilePath) throws StateCodeAnalyserException {
         int recordCounter = 0;
         try {
             InputValidator inputValidator = new InputValidator();
@@ -28,7 +29,9 @@ public class StateCodeAnalyser {
             Iterable<StateCodeData> csvIterable = () -> stateCodeIterator;
             recordCounter = (int) StreamSupport.stream(csvIterable.spliterator(), false).count();
         } catch (IOException ioException) {
-            ioException.printStackTrace();
+            throw new StateCodeAnalyserException("Please check given path", StateCodeAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+        } catch (RuntimeException runtimeException) {
+            throw new StateCodeAnalyserException("Internal file error.Please check your csv file.", StateCodeAnalyserException.ExceptionType.INTERNAL_FILE_ISSUES);
         }
         return recordCounter;
     }
