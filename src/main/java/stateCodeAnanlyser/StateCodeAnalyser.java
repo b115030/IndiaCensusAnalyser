@@ -1,5 +1,6 @@
 package stateCodeAnanlyser;
 
+import StateCodeAnalyze.StateCodeData;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
