@@ -4,10 +4,11 @@ import org.junit.rules.ExpectedException;
 
 public class CensusAnalyserTest {
 
-    private static final String INDIAN_CENSUS_CSV_FILE_PATH = "./src/main/resources/StateCensusData.csv" ;
-    private static final String WRONG_CENSUS_CSV_FILE_PATH = "./src/test/resources/StateCensusData.csv" ;
-    private static final String WRONG_CENSUS_CSV_FILE_EXTENSION = "./src/main/resources/StateCensusData.txt" ;
-    private static final String WRONG_CENSUS_CSV_DELIMITER = "./src/main/resources/StateCensusData.csv" ;
+    private static final String INDIAN_CENSUS_CSV_FILE_PATH = "./src/main/resources/StateCensusData.csv";
+    private static final String WRONG_CENSUS_CSV_FILE_PATH = "./src/test/resources/StateCensusData.csv";
+    private static final String WRONG_CENSUS_CSV_FILE_EXTENSION = "./src/main/resources/StateCensusData.txt";
+    private static final String WRONG_CENSUS_CSV_DELIMITER = "./src/main/resources/StateCensusData.csv";
+    private static final String WRONG_CENSUS_CSV_HEADER = "./src/main/resources/StateCensusData.csv";
 
 
     @Test
@@ -20,6 +21,7 @@ public class CensusAnalyserTest {
         }
         Assert.assertEquals(29, count);
     }
+
     @Test
     public void givenStateCensusCSVFile_WhenPathIsIncorrect_ShouldThrowCustomException() {
         try {
@@ -29,9 +31,10 @@ public class CensusAnalyserTest {
             censusAnalyser.loadCensusData(WRONG_CENSUS_CSV_FILE_PATH);
         } catch (CensusAnalyserException censusAnalyserException) {
             System.out.println(censusAnalyserException.getMessage());
-            Assert.assertEquals(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM , censusAnalyserException.type);
+            Assert.assertEquals(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM, censusAnalyserException.type);
         }
     }
+
     @Test
     public void givenStateCensusCSVFile_WhenFileExtensionIncorrect_ShouldThrowException() {
         try {
@@ -41,11 +44,12 @@ public class CensusAnalyserTest {
             censusAnalyser.loadCensusData(WRONG_CENSUS_CSV_FILE_EXTENSION);
         } catch (CensusAnalyserException censusAnalyserException) {
             System.out.println(censusAnalyserException.getMessage());
-            Assert.assertEquals(CensusAnalyserException.ExceptionType.INCORRECT_EXTENSION , censusAnalyserException.type);
+            Assert.assertEquals(CensusAnalyserException.ExceptionType.INCORRECT_EXTENSION, censusAnalyserException.type);
         }
     }
+
     @Test
-    public void givenStateCensusCSVFile_WhenHavingWrongDelimiter_ShouldThrowException()  {
+    public void givenStateCensusCSVFile_WhenHavingWrongDelimiter_ShouldThrowException() {
         try {
             StateCensusAnalyser censusAnalyser = new StateCensusAnalyser();
             ExpectedException exceptionRule = ExpectedException.none();
@@ -54,7 +58,20 @@ public class CensusAnalyserTest {
             System.out.println(count);
         } catch (CensusAnalyserException censusAnalyserException) {
             System.out.println(censusAnalyserException.getMessage());
-            Assert.assertEquals(CensusAnalyserException.ExceptionType.DELIMITER_ERROR , censusAnalyserException.type);
+            Assert.assertEquals(CensusAnalyserException.ExceptionType.INTERNAL_FILE_ISSUES, censusAnalyserException.type);
+        }
+    }
+
+    @Test
+    public void givenStateCensusCSVFile_WhenHavingWrongHeader_ShouldThrowException() {
+        try {
+            StateCensusAnalyser censusAnalyser = new StateCensusAnalyser();
+            ExpectedException exceptionRule = ExpectedException.none();
+            exceptionRule.expect(CensusAnalyserException.class);
+            int count = censusAnalyser.loadCensusData(WRONG_CENSUS_CSV_HEADER);
+            System.out.println(count);
+        } catch (CensusAnalyserException censusAnalyserException) {
+            Assert.assertEquals(CensusAnalyserException.ExceptionType.INTERNAL_FILE_ISSUES, censusAnalyserException.type);
         }
     }
 }
