@@ -8,9 +8,9 @@ import java.util.Iterator;
 
 public class StateCensusAnalyser {
 
-    public int loadCensusData(String csvFilePath) throws IOException {
+    public int loadCensusData(String csvFilePath) throws CensusAnalyserException{
         int recordCounter = 0;
-
+        try {
         Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
         CsvToBeanBuilder<IndianStateCode> csvToBeanBuilder = new CsvToBeanBuilder<IndianStateCode>(reader);
         csvToBeanBuilder.withType(IndianStateCode.class);
@@ -20,6 +20,9 @@ public class StateCensusAnalyser {
         while (stateCodeIterator.hasNext()) {
             recordCounter++;
             stateCodeIterator.next();
+        }
+        } catch (IOException e) {
+            throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
         }
         return recordCounter;
     }
