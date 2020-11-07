@@ -4,18 +4,23 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
 import java.io.Reader;
-import java.util.Iterator;
+import java.util.List;
 
 public class OpenCSVBuilder<E> implements ICSVBuilder {
-    public Iterator<E> getCSVFileIterator(Reader reader, Class csvClass) throws CSVException {
+
+    @Override
+    public List getCSVFileList(Reader reader, Class csvClass) throws CSVException {
+        return this.getCSVBean (reader , csvClass).parse();
+    }
+
+    private CsvToBean<E> getCSVBean(Reader reader, Class csvClass) throws CSVException {
         try {
-            CsvToBeanBuilder<E> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
+            CsvToBeanBuilder<E> csvToBeanBuilder = new CsvToBeanBuilder<E>(reader);
             csvToBeanBuilder.withType(csvClass);
             csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
-            CsvToBean<E> csvToBean = csvToBeanBuilder.build();
-            return csvToBean.iterator();
+            return csvToBeanBuilder.build();
         } catch (IllegalStateException e) {
-            throw new CSVException(e.getMessage(), CSVException.ExceptionType.UNABLE_TO_PARSE);
+            throw new CSVException("Unable to parse.", CSVException.ExceptionType.UNABLE_TO_PARSE);
         }
     }
 }

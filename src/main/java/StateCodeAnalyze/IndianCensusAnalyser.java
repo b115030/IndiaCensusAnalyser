@@ -5,9 +5,12 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.List;
 import java.util.stream.StreamSupport;
 
 public class IndianCensusAnalyser {
+    List<IndianCensusData> censusCSVList = null;
+    List<StateCodeData> stateCodeCSVList = null;
 
     public static void validateExtension(String csvFilePath) throws CSVException {
         InputValidator inputValidator = new InputValidator();
@@ -20,8 +23,8 @@ public class IndianCensusAnalyser {
         validateExtension(csvFilePath);
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))){
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            Iterator<IndianCensusData> censusCSVIterator = csvBuilder.getCSVFileIterator(reader, IndianCensusData.class);
-            return this.getCountOfRecords(censusCSVIterator);
+            censusCSVList = csvBuilder.getCSVFileList(reader, IndianCensusData.class);
+            return censusCSVList.size();
         } catch (IOException e) {
             throw new CSVException("Please check your file path", CSVException.ExceptionType.CENSUS_FILE_PROBLEM);
         }catch (RuntimeException e) {
@@ -33,8 +36,8 @@ public class IndianCensusAnalyser {
         validateExtension(csvFilePath);
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))){
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            Iterator<IndianCensusData> censusCSVIterator = csvBuilder.getCSVFileIterator(reader, IndianCensusData.class);
-            return this.getCountOfRecords(censusCSVIterator);
+            stateCodeCSVList = csvBuilder.getCSVFileList(reader, StateCodeData.class);
+            return stateCodeCSVList.size();
         } catch (IOException e) {
             throw new CSVException("Please check your file path", CSVException.ExceptionType.CENSUS_FILE_PROBLEM);
         }catch (RuntimeException e) {
