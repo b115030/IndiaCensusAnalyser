@@ -5,7 +5,7 @@ public class InputValidator  {
     public InputValidator() {
         iPattern = ((input, pattern) -> input.matches(pattern));
     }
-    public boolean validateFileExtension(String path) throws CensusAnalyserException {
+    public boolean validateFileExtension(String path) throws CSVException {
         return iPattern.patternMatcher(path , REGEX_EXTENSION);
     }
 
