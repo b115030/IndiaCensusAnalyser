@@ -22,7 +22,7 @@ public class IndianCensusAnalyser {
     public int loadCensusData(String csvFilePath ) throws CSVException {
         validateExtension(csvFilePath);
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))){
-            ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
+            ICSVBuilder csvBuilder = CSVBuilderFactory.createCommonsCSVBuilder();
             censusCSVList = csvBuilder.getCSVFileList(reader, IndianCensusData.class);
             return censusCSVList.size();
         } catch (IOException e) {
